@@ -32,45 +32,8 @@
     font-size: 15px;
   }
 
-  /* LOGIN SCREEN */
-  #login-screen {
-    position: fixed; inset: 0; background: var(--white);
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; z-index: 100; padding: 40px 32px;
-    transition: opacity 0.3s;
-  }
-  .login-logo {
-    width: 52px; height: 52px; background: var(--accent);
-    border-radius: 14px; display: flex; align-items: center;
-    justify-content: center; margin-bottom: 28px;
-  }
-  .login-logo svg { width: 26px; height: 26px; stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; }
-  .login-title { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 6px; letter-spacing: -0.3px; }
-  .login-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 40px; text-align: center; line-height: 1.6; }
-
-  .google-btn {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 24px; background: var(--white);
-    border: 1.5px solid var(--border-strong); border-radius: 10px;
-    font-size: 15px; font-weight: 600; font-family: 'Figtree', sans-serif;
-    cursor: pointer; transition: background 0.15s, border-color 0.15s;
-    color: var(--text); width: 100%; max-width: 280px; justify-content: center;
-  }
-  .google-btn:active { background: var(--bg); }
-  .google-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
-
-  .login-error {
-    margin-top: 16px; font-size: 13px; color: var(--red);
-    text-align: center; display: none;
-  }
-
-  .login-loading {
-    margin-top: 16px; font-size: 13px; color: var(--text-muted);
-    text-align: center; display: none;
-  }
-
   /* APP */
-  #app { display: none; max-width: 480px; margin: 0 auto; padding-bottom: 100px; }
+  #app { max-width: 480px; margin: 0 auto; padding-bottom: 100px; }
 
   /* HEADER */
   .header {
@@ -81,17 +44,28 @@
   .header-top { display: flex; align-items: center; justify-content: space-between; }
   .header-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); }
   .header-right { display: flex; align-items: center; gap: 12px; }
+
   .sync-label { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
   .sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #ccc; transition: background 0.4s; }
   .sync-dot.live { background: #22c55e; }
   .sync-dot.error-state { background: var(--red); }
 
+  /* LOGIN BTN (未登入) */
+  .login-chip {
+    font-size: 12px; font-weight: 600; color: var(--accent);
+    background: var(--accent-light); border: none; border-radius: 20px;
+    padding: 5px 12px; cursor: pointer; font-family: 'Figtree', sans-serif;
+    transition: opacity 0.15s;
+  }
+  .login-chip:active { opacity: 0.7; }
+
+  /* USER AVATAR (已登入) */
   .user-avatar {
     width: 28px; height: 28px; border-radius: 50%;
     background: var(--accent-light); border: 1.5px solid var(--border-strong);
     display: flex; align-items: center; justify-content: center;
     font-size: 11px; font-weight: 700; color: var(--accent); cursor: pointer;
-    overflow: hidden;
+    overflow: hidden; display: none;
   }
   .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -156,16 +130,22 @@
   /* TABLE */
   .table-section { padding: 0 20px; }
   .table-header {
-    display: grid; grid-template-columns: 70px 1fr 1fr 36px; gap: 8px;
+    display: grid; gap: 8px;
     padding: 14px 0 10px; border-bottom: 1.5px solid var(--border-strong);
   }
+  .table-header.guest { grid-template-columns: 70px 1fr 1fr; }
+  .table-header.authed { grid-template-columns: 70px 1fr 1fr 36px; }
   .table-header span { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-light); }
   .table-header span:nth-child(2), .table-header span:nth-child(3) { text-align: right; }
+
   .row {
-    display: grid; grid-template-columns: 70px 1fr 1fr 36px; gap: 8px;
+    display: grid; gap: 8px;
     padding: 14px 0; border-bottom: 1px solid var(--border);
     align-items: center; animation: fadeIn 0.25s ease;
   }
+  .row.guest { grid-template-columns: 70px 1fr 1fr; }
+  .row.authed { grid-template-columns: 70px 1fr 1fr 36px; }
+
   @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
   .row-date { font-size: 13px; font-family: 'DM Mono', monospace; color: var(--text-muted); }
   .row-amount { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--red); text-align: right; }
@@ -177,10 +157,11 @@
     justify-content: center; color: var(--text-light); transition: background 0.15s, color 0.15s;
   }
   .del-btn:active { background: var(--red-light); color: var(--red); }
+
   .empty-state { text-align: center; padding: 48px 0; color: var(--text-muted); font-size: 14px; }
   .empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
 
-  /* MODAL */
+  /* MODALS */
   .modal-overlay {
     position: fixed; inset: 0; background: rgba(0,0,0,0.25);
     z-index: 50; display: none; align-items: flex-end;
@@ -194,36 +175,27 @@
   .modal-cancel { padding: 12px; border: 1.5px solid var(--border-strong); border-radius: 8px; background: transparent; font-size: 14px; font-weight: 600; font-family: 'Figtree', sans-serif; cursor: pointer; color: var(--text); }
   .modal-confirm { padding: 12px; background: var(--red); color: white; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; font-family: 'Figtree', sans-serif; cursor: pointer; }
 
-  /* LOGOUT MODAL */
-  #logout-modal .modal-confirm { background: var(--accent); }
+  /* LOGIN MODAL */
+  .google-btn {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px; background: var(--white);
+    border: 1.5px solid var(--border-strong); border-radius: 10px;
+    font-size: 14px; font-weight: 600; font-family: 'Figtree', sans-serif;
+    cursor: pointer; color: var(--text); width: 100%; justify-content: center;
+    transition: background 0.15s;
+  }
+  .google-btn:active { background: var(--bg); }
+  .google-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .login-error { margin-top: 10px; font-size: 12px; color: var(--red); text-align: center; display: none; }
+  .login-loading { margin-top: 10px; font-size: 12px; color: var(--text-muted); text-align: center; display: none; }
 
   .divider { height: 8px; background: var(--bg); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 </style>
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div id="login-screen">
-  <div class="login-logo">
-    <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-  </div>
-  <div class="login-title">境外提現追蹤</div>
-  <div class="login-sub">使用授權帳號登入<br>以存取共用記錄</div>
-  <button class="google-btn" onclick="signInWithGoogle()">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-      <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-      <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
-      <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-    </svg>
-    使用 Google 登入
-  </button>
-  <div class="login-error" id="login-error">此帳號無存取權限</div>
-  <div class="login-loading" id="login-loading">登入中…</div>
-</div>
-
-<!-- APP -->
 <div id="app">
+  <!-- HEADER -->
   <div class="header">
     <div class="header-top">
       <div class="header-label">境外提現額度 2026</div>
@@ -232,11 +204,13 @@
           <span class="sync-dot" id="sync-dot"></span>
           <span id="sync-text">連線中…</span>
         </div>
-        <div class="user-avatar" id="user-avatar" onclick="showLogout()" title="登出"></div>
+        <button class="login-chip" id="login-chip" onclick="showLoginModal()">登入</button>
+        <div class="user-avatar" id="user-avatar" onclick="showLogoutModal()"></div>
       </div>
     </div>
   </div>
 
+  <!-- SUMMARY -->
   <div class="summary">
     <div class="summary-grid">
       <div class="stat-box">
@@ -261,6 +235,7 @@
     </div>
   </div>
 
+  <!-- ADD FORM -->
   <div class="add-section" id="add-section">
     <div class="form-title">新增記錄</div>
     <div class="form-row">
@@ -281,21 +256,41 @@
 
   <div class="divider"></div>
 
+  <!-- TABLE -->
   <div class="table-section">
-    <div class="table-header">
+    <div class="table-header guest" id="table-header">
       <span>日期</span>
       <span>金額</span>
       <span>剩餘額度</span>
-      <span></span>
     </div>
     <div id="records-list"><div class="empty-state"><div class="empty-icon">⏳</div>載入中…</div></div>
   </div>
 </div>
 
+<!-- FAB -->
 <button class="fab" id="fab" onclick="toggleForm()">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
   新增提現
 </button>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <div class="modal-title">登入</div>
+    <div class="modal-body">使用授權嘅 Google 帳號登入，方可新增或刪除記錄。</div>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      使用 Google 登入
+    </button>
+    <div class="login-error" id="login-error">此帳號無存取權限</div>
+    <div class="login-loading" id="login-loading">登入中…</div>
+  </div>
+</div>
 
 <!-- DELETE MODAL -->
 <div class="modal-overlay" id="del-modal">
@@ -342,26 +337,66 @@
   const TOTAL = 100000;
   const DB_PATH = 'records_2026';
 
-  const app = initializeApp(FIREBASE_CONFIG);
-  const auth = getAuth(app);
-  const db = getDatabase(app);
+  const fbApp = initializeApp(FIREBASE_CONFIG);
+  const auth = getAuth(fbApp);
+  const db = getDatabase(fbApp);
   const provider = new GoogleAuthProvider();
 
-  let dbRef, records = {}, deleteTarget = null, formOpen = false;
+  let dbRef = ref(db, DB_PATH);
+  let records = {}, deleteTarget = null, formOpen = false;
+  let currentUser = null;
+
+  // INIT DB (always, no auth needed to read)
+  setSyncStatus('connecting');
+  onValue(dbRef, snap => {
+    records = snap.val() || {};
+    if (Object.keys(records).length === 0) {
+      seedDefaults();
+      return;
+    }
+    setSyncStatus('live');
+    render();
+  }, () => setSyncStatus('error'));
 
   // AUTH STATE
   onAuthStateChanged(auth, user => {
     if (user && ALLOWED.includes(user.email)) {
-      showApp(user);
-      initDB();
+      currentUser = user;
+      setAuthedUI(user);
     } else if (user) {
-      // signed in but not allowed
       signOut(auth);
-      showLoginError();
+      currentUser = null;
+      setGuestUI();
+      showError('此帳號無存取權限');
     } else {
-      showLoginScreen();
+      currentUser = null;
+      setGuestUI();
     }
   });
+
+  function setGuestUI() {
+    document.getElementById('login-chip').style.display = 'block';
+    const av = document.getElementById('user-avatar');
+    av.style.display = 'none';
+    document.getElementById('fab').style.display = 'none';
+    closeForm();
+    render();
+  }
+
+  function setAuthedUI(user) {
+    document.getElementById('login-chip').style.display = 'none';
+    const av = document.getElementById('user-avatar');
+    av.style.display = 'flex';
+    if (user.photoURL) {
+      av.innerHTML = `<img src="${user.photoURL}" alt="">`;
+    } else {
+      av.textContent = (user.displayName || user.email)[0].toUpperCase();
+    }
+    document.getElementById('fab').style.display = 'flex';
+    document.getElementById('logout-body').textContent = `確定要登出 ${user.email}？`;
+    closeModal('login-modal');
+    render();
+  }
 
   // SIGN IN
   window.signInWithGoogle = async () => {
@@ -372,58 +407,16 @@
     } catch(e) {
       document.getElementById('login-loading').style.display = 'none';
       if (e.code !== 'auth/popup-closed-by-user') {
-        document.getElementById('login-error').textContent = '登入失敗，請重試';
-        document.getElementById('login-error').style.display = 'block';
+        showError('登入失敗，請重試');
       }
     }
   };
 
-  function showLoginError() {
+  function showError(msg) {
     document.getElementById('login-loading').style.display = 'none';
-    document.getElementById('login-error').textContent = '此帳號無存取權限';
-    document.getElementById('login-error').style.display = 'block';
-  }
-
-  function showLoginScreen() {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('login-screen').style.opacity = '1';
-    document.getElementById('app').style.display = 'none';
-    document.getElementById('fab').style.display = 'none';
-    document.getElementById('login-loading').style.display = 'none';
-  }
-
-  function showApp(user) {
-    document.getElementById('login-screen').style.opacity = '0';
-    setTimeout(() => {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('app').style.display = 'block';
-      document.getElementById('fab').style.display = 'flex';
-    }, 300);
-
-    // avatar
-    const av = document.getElementById('user-avatar');
-    if (user.photoURL) {
-      av.innerHTML = `<img src="${user.photoURL}" alt="">`;
-    } else {
-      av.textContent = (user.displayName || user.email)[0].toUpperCase();
-    }
-    document.getElementById('logout-body').textContent = `確定要登出 ${user.email}？`;
-  }
-
-  // DB
-  function initDB() {
-    dbRef = ref(db, DB_PATH);
-    setSyncStatus('connecting');
-
-    onValue(dbRef, snap => {
-      records = snap.val() || {};
-      if (Object.keys(records).length === 0) {
-        seedDefaults();
-        return;
-      }
-      setSyncStatus('live');
-      render();
-    }, () => setSyncStatus('error'));
+    const el = document.getElementById('login-error');
+    el.textContent = msg;
+    el.style.display = 'block';
   }
 
   async function seedDefaults() {
@@ -449,6 +442,7 @@
   }
 
   function render() {
+    const isAuthed = !!currentUser;
     const arr = Object.entries(records)
       .map(([key, v]) => ({ key, ...v }))
       .sort((a, b) => new Date(a.date) - new Date(b.date) || (a.ts||0) - (b.ts||0));
@@ -470,21 +464,30 @@
     document.getElementById('pct-label').textContent = `已用 ${pct.toFixed(1)}%`;
     document.getElementById('remain-label').textContent = `剩餘 ${fmt(totalRemain)}`;
 
+    // update table header cols
+    const th = document.getElementById('table-header');
+    th.className = `table-header ${isAuthed ? 'authed' : 'guest'}`;
+    if (isAuthed && th.children.length === 3) {
+      th.innerHTML = '<span>日期</span><span>金額</span><span>剩餘額度</span><span></span>';
+    } else if (!isAuthed && th.children.length === 4) {
+      th.innerHTML = '<span>日期</span><span>金額</span><span>剩餘額度</span>';
+    }
+
     const list = document.getElementById('records-list');
     if (rows.length === 0) {
       list.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div>暫無記錄</div>`;
       return;
     }
     list.innerHTML = [...rows].reverse().map(r => `
-      <div class="row">
+      <div class="row ${isAuthed ? 'authed' : 'guest'}">
         <div class="row-date">${fmtDate(r.date)}</div>
         <div class="row-amount">−${fmt(r.amount)}</div>
         <div class="row-remain">${fmt(r.remain)}</div>
-        <div class="row-del">
+        ${isAuthed ? `<div class="row-del">
           <button class="del-btn" onclick="window._askDelete('${r.key}')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
           </button>
-        </div>
+        </div>` : ''}
       </div>
     `).join('');
   }
@@ -509,6 +512,7 @@
   };
 
   window.saveRecord = async () => {
+    if (!currentUser) return;
     const date = document.getElementById('f-date').value;
     const amount = parseFloat(document.getElementById('f-amount').value.replace(/,/g, ''));
     const amtEl = document.getElementById('f-amount');
@@ -536,6 +540,10 @@
   window.closeModal = id => {
     document.getElementById(id).classList.remove('show');
     if (id === 'del-modal') deleteTarget = null;
+    if (id === 'login-modal') {
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('login-loading').style.display = 'none';
+    }
   };
 
   window.confirmDelete = async () => {
@@ -545,15 +553,21 @@
     closeModal('del-modal');
   };
 
-  // LOGOUT
-  window.showLogout = () => document.getElementById('logout-modal').classList.add('show');
+  // LOGIN / LOGOUT
+  window.showLoginModal = () => document.getElementById('login-modal').classList.add('show');
+  window.showLogoutModal = () => document.getElementById('logout-modal').classList.add('show');
   window.confirmLogout = async () => {
     closeModal('logout-modal');
     await signOut(auth);
   };
 
   document.querySelectorAll('.modal-overlay').forEach(el => {
-    el.addEventListener('click', e => { if (e.target === el) el.classList.remove('show'); });
+    el.addEventListener('click', e => {
+      if (e.target === el) {
+        const id = el.id;
+        closeModal(id);
+      }
+    });
   });
 </script>
 </body>
