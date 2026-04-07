@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>境外提現追蹤</title>
+<title>境外撳錢追蹤</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="境外撳錢">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -327,15 +329,13 @@
 <div class="modal-overlay" id="edit-modal">
   <div class="modal">
     <div class="modal-title">編輯記錄</div>
-    <div class="form-row" style="margin-bottom:12px;">
-      <div class="form-field">
-        <label>日期</label>
-        <input type="date" id="edit-date">
-      </div>
-      <div class="form-field">
-        <label>金額</label>
-        <input type="text" inputmode="numeric" id="edit-amount" placeholder="0">
-      </div>
+    <div class="form-field" style="margin-bottom:12px;">
+      <label>日期</label>
+      <input type="date" id="edit-date">
+    </div>
+    <div class="form-field" style="margin-bottom:16px;">
+      <label>金額</label>
+      <input type="text" inputmode="numeric" id="edit-amount" placeholder="0">
     </div>
     <div class="modal-actions">
       <button class="modal-cancel" onclick="closeModal('edit-modal')">取消</button>
