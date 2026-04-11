@@ -4,7 +4,7 @@
   "description": "境外提現額度追蹤 2026",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#F7F7F5",
+  "background_color": "#1A3C5E",
   "theme_color": "#1A3C5E",
   "lang": "zh-HK",
   "icons": [

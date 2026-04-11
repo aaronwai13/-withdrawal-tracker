@@ -1,4 +1,4 @@
-const CACHE = 'withdrawal-tracker-v2';
+const CACHE = 'withdrawal-tracker-v2026.04.11.0';
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -17,26 +17,29 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // index.html 網絡優先
-  if (e.request.mode === 'navigate' || e.request.url.includes('index.html')) {
+  // Firebase / Google 請求：直接網絡，唔快取
+  if (e.request.url.includes('firebaseio.com') ||
+      e.request.url.includes('googleapis.com') ||
+      e.request.url.includes('gstatic.com')) {
+    return;
+  }
+  if (e.request.mode === 'navigate') {
+    // 主頁面：網絡優先（確保拿到最新版）
     e.respondWith(
-      fetch(e.request)
-        .then(res => {
-          const clone = res.clone();
-          caches.open(CACHE).then(c => c.put(e.request, clone));
-          return res;
-        })
-        .catch(() => caches.match(e.request))
+      fetch(e.request).then(res => {
+        caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+        return res;
+      }).catch(() => caches.match(e.request))
     );
     return;
   }
-  // Firebase 直接網絡
-  if (e.request.url.includes('firebase') || e.request.url.includes('googleapis')) {
-    e.respondWith(fetch(e.request));
-    return;
-  }
-  // 其他靜態資源：緩存優先
+  // 其他靜態資源：緩存優先，首次 fetch 同時寫入緩存
   e.respondWith(
-    caches.match(e.request).then(cached => cached || fetch(e.request))
+    caches.match(e.request).then(cached =>
+      cached || fetch(e.request).then(res => {
+        caches.open(CACHE).then(c => c.put(e.request, res.clone()));
+        return res;
+      })
+    )
   );
 });
