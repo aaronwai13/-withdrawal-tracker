@@ -7,7 +7,9 @@
 - `index.html`: UI、樣式同 app logic
 - `manifest.json`: PWA manifest
 - `sw.js`: service worker 同快取策略
-- `icon-192.png`: 主畫面 icon
+- `icon.svg`: icon 原稿，方便之後改字或改色
+- `icon-192.png`: PWA / Android 基本 icon
+- `apple-touch-icon.png`: iPhone / iPad 加到主畫面 icon
 
 ## App Config
 
@@ -57,5 +59,5 @@ python3 -m http.server 8000
 
 - 保持零 build step
 - 優先延續單頁原生 HTML/CSS/JS 結構
-- custom PWA icon 採用白底、`額` 字、iPhone 默認字體
+- custom PWA icon 採用白底、`額` 字，並保留 `icon.svg`、`icon-192.png`、`apple-touch-icon.png`
 - 如果之後再明顯加功能，先考慮按 guideline 拆 `app.js`

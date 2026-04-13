@@ -1,8 +1,8 @@
-const CACHE = 'withdrawal-tracker-v2026.04.13.0';
+const CACHE = 'withdrawal-tracker-v2026.04.14.0';
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(['./', './index.html', './manifest.json', './icon-192.png']))
+    caches.open(CACHE).then(c => c.addAll(['./', './index.html', './manifest.json', './icon-192.png', './apple-touch-icon.png']))
   );
   self.skipWaiting();
 });

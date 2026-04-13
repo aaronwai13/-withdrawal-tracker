@@ -1,6 +1,8 @@
 {
   "rules": {
-    ".read": true,
-    ".write": "auth != null && (auth.token.email == 'nentivericfv@gmail.com' || auth.token.email == '1252719751@qq.com')"
+    "records_2026": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.email == 'nentivericfv@gmail.com' || auth.token.email == '1252719751@qq.com')"
+    }
   }
 }

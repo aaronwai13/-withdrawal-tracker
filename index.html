@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>撳錢額度</title>
-<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="manifest" href="./manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="撳錢額度">
@@ -409,6 +409,11 @@
     { date: '2026-03-08', amount: 885.20 },
   ];
 
+  const DEFAULT_RECORD_KEYS = DEFAULT_RECORDS.reduce((map, record, index) => {
+    map[`seed-${record.date}-${index + 1}`] = { ...record, ts: index + 1 };
+    return map;
+  }, {});
+
   let dbRef = ref(db, DB_PATH);
   let records = {}, deleteTarget = null, formOpen = false;
   let currentUser = null;
@@ -499,9 +504,7 @@
   }
 
   async function seedDefaults() {
-    for (const record of DEFAULT_RECORDS) {
-      await push(dbRef, { ...record, ts: Date.now() });
-    }
+    await update(dbRef, DEFAULT_RECORD_KEYS);
   }
 
   function setSyncStatus(state) {
