@@ -1,4 +1,4 @@
-<!-- VERSION: 2026.04.14.0 -->
+<!-- VERSION: 2026.04.14.11 -->
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
@@ -77,7 +77,14 @@
     position: sticky; top: 0; z-index: 10;
   }
   .header-top { display: flex; align-items: center; justify-content: space-between; }
+  .header-left { display: flex; flex-direction: column; gap: 4px; }
   .header-label { font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-muted); }
+  .header-version {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-light);
+    letter-spacing: 0.04em;
+  }
   .header-right { display: flex; align-items: center; gap: 12px; }
 
   .sync-label { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
@@ -234,7 +241,10 @@
   <!-- HEADER -->
   <div class="header">
     <div class="header-top">
-      <div class="header-label">撳錢額度 2026</div>
+      <div class="header-left">
+        <div class="header-label">撳錢額度 2026</div>
+        <div class="header-version">v2026.04.14.11</div>
+      </div>
       <div class="header-right">
         <div class="sync-label">
           <span class="sync-dot" id="sync-dot"></span>
