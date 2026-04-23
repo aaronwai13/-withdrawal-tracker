@@ -471,7 +471,7 @@
 </script>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  import { getAuth, getRedirectResult, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import { getDatabase, ref, onValue, push, remove, update }
     from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -494,6 +494,9 @@
   const auth = getAuth(fbApp);
   const db = getDatabase(fbApp);
   const provider = new GoogleAuthProvider();
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+  const useRedirectAuth = isStandalone && isIOS;
 
   const DEFAULT_RECORDS = [
     { date: '2026-01-09', amount: 1796.80 },
@@ -542,6 +545,11 @@
     }
   });
 
+  getRedirectResult(auth).catch(e => {
+    console.error(e);
+    showError('登入失敗，請重試');
+  });
+
   function setGuestUI() {
     document.getElementById('login-chip').classList.add('show');
     document.getElementById('user-avatar').classList.remove('show');
@@ -571,6 +579,10 @@
     document.getElementById('login-error').style.display = 'none';
     document.getElementById('login-loading').style.display = 'block';
     try {
+      if (useRedirectAuth) {
+        await signInWithRedirect(auth, provider);
+        return;
+      }
       await signInWithPopup(auth, provider);
     } catch(e) {
       document.getElementById('login-loading').style.display = 'none';
@@ -585,6 +597,10 @@
     const el = document.getElementById('login-error');
     el.textContent = msg;
     el.style.display = 'block';
+  }
+
+  function showWriteError(msg = '儲存失敗，請重試') {
+    window.showToast?.(msg, 'var(--red)');
   }
 
   async function maybeSeedDefaults() {
@@ -707,6 +723,9 @@
     try {
       await push(dbRef, { date, amount, ts: Date.now() });
       closeForm();
+    } catch (e) {
+      console.error(e);
+      showWriteError('新增失敗，請檢查網絡後再試');
     } finally {
       btn.disabled = false; btn.textContent = '確認';
     }
@@ -728,9 +747,12 @@
     if (!date || isNaN(amount) || amount <= 0) return;
     try {
       await update(ref(db, `${DB_PATH}/${editTarget}`), { date, amount });
-    } catch(e) { console.error(e); }
-    closeModal('edit-modal');
-    editTarget = null;
+      closeModal('edit-modal');
+      editTarget = null;
+    } catch(e) {
+      console.error(e);
+      showWriteError('修改失敗，請檢查網絡後再試');
+    }
   };
 
   // DELETE
@@ -750,7 +772,13 @@
 
   window.confirmDelete = async () => {
     if (deleteTarget) {
-      try { await remove(ref(db, `${DB_PATH}/${deleteTarget}`)); } catch(e) { console.error(e); }
+      try {
+        await remove(ref(db, `${DB_PATH}/${deleteTarget}`));
+      } catch(e) {
+        console.error(e);
+        showWriteError('刪除失敗，請檢查網絡後再試');
+        return;
+      }
     }
     closeModal('del-modal');
   };
