@@ -560,7 +560,6 @@
   const ALLOWED = ['nentivericfv@gmail.com', '1252719751@qq.com'];
   const TOTAL = 100000;
   const DB_PATH = 'records_2026';
-  const APP_YEAR = '2026';
 
   const fbApp = initializeApp(FIREBASE_CONFIG);
   const auth = getAuth(fbApp);
@@ -745,10 +744,20 @@
   function syncMonthFilterOptions() {
     const select = document.getElementById('month-filter');
     const current = monthFilter;
-    select.innerHTML = '<option value="all">全年</option>' + Array.from({ length: 12 }, (_, i) => {
-      const month = String(i + 1).padStart(2, '0');
-      return `<option value="${APP_YEAR}-${month}">${i + 1}月</option>`;
-    }).join('');
+    const years = [...new Set([
+      new Date().getFullYear().toString(),
+      ...Object.values(records).map(r => r.date?.split('-')[0]).filter(Boolean)
+    ])].sort();
+    const multiYear = years.length > 1;
+    const options = ['<option value="all">全年</option>'];
+    for (const year of years) {
+      for (let i = 0; i < 12; i++) {
+        const month = String(i + 1).padStart(2, '0');
+        const label = multiYear ? `${year}年${i + 1}月` : `${i + 1}月`;
+        options.push(`<option value="${year}-${month}">${label}</option>`);
+      }
+    }
+    select.innerHTML = options.join('');
     select.value = current;
     if (select.value !== current) {
       monthFilter = 'all';
@@ -763,7 +772,7 @@
     const total = filtered.reduce((s, r) => s + r.amount, 0);
     const count = filtered.length;
     const avg = count ? total / count : 0;
-    const label = monthFilter === 'all' ? '全年小計' : `${parseInt(monthFilter.split('-')[1])}月小計`;
+    const label = monthFilter === 'all' ? '全年小計' : `${monthFilter.split('-')[0]}年${parseInt(monthFilter.split('-')[1])}月小計`;
 
     document.getElementById('month-total-label').textContent = label;
     document.getElementById('month-total').textContent = fmt(total);
